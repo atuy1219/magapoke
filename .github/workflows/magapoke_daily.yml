@@ -1,0 +1,29 @@
+name: Magapoke Point Farmer
+
+on:
+  schedule:
+    - cron: '0 20 * * *'  # JST 07:00
+  workflow_dispatch:      # 手動実行ボタンを有効化
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v6
+
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.14'
+
+    - name: Install dependencies
+      run: |
+        pip install selenium webdriver-manager
+
+    - name: Run Point Farmer
+      env:
+        MAGAPOKE_COOKIES_BASE64: ${{ secrets.MAGAPOKE_COOKIES_BASE64 }}
+      run: |
+        python magapoke_point_farmer.py
